@@ -1,8 +1,19 @@
+import axios from 'axios';
+
 /*
   STEP 1: using axios, send a GET request to the following URL
     (replacing the placeholder with your Github name):
     https://api.github.com/users/<your name>
 */
+
+axios.get('https://api.github.com/users/johngrabowskiiii')
+  .then(res => {
+    console.log(res.data);
+    userCard(res.data);
+  })
+  .catch(err => {
+    console.log(err);
+  })
 
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
@@ -49,6 +60,99 @@ const followersArray = [];
       </div>
     </div>
 */
+
+function userCard(userObj) {
+
+  const divMaker = () => document.createElement('div');
+  const pTagMaker = () => document.createElement('p');
+
+  const elementObject = {
+    cardHolderDiv: () => {
+      const newDiv = divMaker();
+      newDiv.classList.add('card');
+      return newDiv;
+    },
+    userImg: () => {
+      const newImg = document.createElement('img');
+      newImg.setAttribute('src', userObj.avatar_url);
+      return newImg;
+    },
+    cardInfoDiv: () => {
+      const newDiv = divMaker();
+      newDiv.classList.add('card-info');
+      return newDiv;
+    },
+    userName: () => {
+      const hThree = document.createElement('h3');
+      hThree.classList.add('name');
+      hThree.textContent = userObj.name;
+      return hThree;
+    },
+    gitHubName: () => {
+      const pName = pTagMaker();
+      pName.classList.add('username');
+      pName.textContent = userObj.login;
+      return pName;
+    },
+    location: () => {
+      const pLocation = pTagMaker();
+      pLocation.textContent = `Location: ${userObj.location}`;
+      return pLocation;
+    },
+    profile: () => {
+      const pProfile = pTagMaker();
+      pProfile.textContent = 'Profile:';
+      return pProfile;
+    },
+    linkToProfile: () => {
+      const aLink = document.createElement('a');
+      aLink.setAttribute('href', userObj.html_url);
+      aLink.textContent = `${userObj.html_url}`;
+      return aLink;
+    },
+    followers: () => {
+      const pFollower = pTagMaker();
+      pFollower.textContent = `Followers: ${userObj.followers}`;
+      return pFollower;
+    },
+    following: () => {
+      const pFollowing = pTagMaker();
+      pFollowing.textContent = `Following: ${userObj.following}`;
+      return pFollowing;
+    },
+    bio: () => {
+      const pBio = pTagMaker();
+      pBio.textContent = `Bio: ${userObj.bio}`;
+      return pBio;
+    }
+  }
+
+  const nodeBuilder = () => {
+
+    const holder = elementObject.cardHolderDiv();
+    const infoSection = elementObject.cardInfoDiv();
+    const linkHolder = elementObject.profile();
+
+    holder.appendChild(elementObject.userImg());
+    holder.appendChild(infoSection);
+
+    infoSection.appendChild(elementObject.userName());
+    infoSection.appendChild(elementObject.gitHubName());
+    infoSection.appendChild(elementObject.location());
+    infoSection.appendChild(linkHolder);
+
+    linkHolder.appendChild(elementObject.linkToProfile());
+
+    infoSection.appendChild(elementObject.followers());
+    infoSection.appendChild(elementObject.following());
+    infoSection.appendChild(elementObject.bio());
+
+    return holder;
+  }
+
+  console.log(nodeBuilder());
+  return nodeBuilder();
+}
 
 /*
   List of LS Instructors Github username's:
